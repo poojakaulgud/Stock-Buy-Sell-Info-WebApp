@@ -1,0 +1,96 @@
+<!-- <ngbd-modal-buy *ngIf="isModalOpen" (closeModalEvent)="handleModalClose()" standalone></ngbd-modal-buy> -->
+<div class="page">
+
+<div class="mb-3 container justify-content-center p-3">
+    <div class="container py-2">
+      
+      <div *ngIf="sold" class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10">
+            <div class="alert alert-danger text-center d-flex justify-content-between align-items-center" role="alert">
+              <span class="flex-grow-1">{{ text }} sold successfully.</span>
+              <button type="button" class="btn-close" aria-label="Close" (click)="sold=false"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="bought" class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 ">
+            <div class="alert alert-success text-center d-flex justify-content-between align-items-center" role="alert">
+              <span class="flex-grow-1">{{ text }} bought successfully.</span>
+              <button type="button" class="btn-close" aria-label="Close" (click)="bought=false"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+        <h1>My Portfolio</h1>
+        <h4>Money in Wallet: ${{balance}}</h4>
+        <div class="d-flex justify-content-center align-items-center">      
+          <mat-spinner  *ngIf="showDataSpinner" diameter="70"></mat-spinner>
+          </div>
+        <div *ngIf="isEmpty" class="container">
+          <div class="row justify-content-center">
+            <div class="col-md-10 ">
+              <div class="alert alert-warning  text-center d-flex justify-content-between align-items-center" role="alert">
+                <p>Currently you don't have any stock in your portfolio.</p>
+              </div>
+            </div>
+          </div>
+      </div>
+        <div *ngFor="let element of portfolio_data" class=" container ngb-card">
+            <div class="card mb-3">
+              <div class="card-header" (click)="navigate(element.ticker)">
+                <h2 class="mb-0"> <strong>{{ element.ticker }} </strong> <small class="text-muted">{{ element.description }}</small></h2>
+              </div>
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-md-6 ">
+                    <div class="row">
+                      <div class="col-6">
+                        <p><strong>Quantity: </strong></p>
+                        <p><strong>Avg. Cost/Share: </strong></p>
+                        <p><strong>Total Cost:</strong></p>
+                      </div>
+                      <div class="col-6">
+                        <p><strong>{{ element.qty }}</strong></p>
+                        <p><strong>{{ element.avg_cost}}</strong></p>
+                        <p><strong>{{ element.total_cost}}</strong></p>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  <div class="col-md-6 ">
+                    <div class="row" [class.text-danger]="(element.change<0)" [class.text-success]="(element.change>0)">
+                      <div class="col-6">
+                      <p><strong>Change: </strong></p>
+                      <p><strong>Current Price: </strong></p>
+                      <p><strong>Market Value: </strong></p>
+                      </div>
+                      <div class="col-6">
+                      <p><strong><span *ngIf="(element.change>0)">&#x25B2;</span><span *ngIf="(element.change<0)">&#x25BC;</span>{{ element.change}}</strong></p>
+                      <p><strong>{{ element.c}}</strong></p>
+                      <p><strong>{{ element.market_value}}</strong></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button type="button" class="btn btn-primary btn mr-2" (click)="openDialog(element,'Buy')">Buy</button>
+                &nbsp;
+                <button type="button" class="btn btn-danger btn" (click)="openDialog(element,'Sell')">Sell</button>
+              </div>
+            </div>
+          </div>
+    </div>
+   
+</div>
+
+<br><br><br><br>
+<div class="footer bottom-0 bg-light text-center p-1 w-100">
+  <b><p class="mb-0">Powered by <a class="" target="_blank" href="https://finnhub.io">Finnhub.io</a></p></b>
+</div>
+
+
+</div>

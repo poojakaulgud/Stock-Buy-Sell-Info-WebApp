@@ -1,0 +1,26 @@
+
+
+  
+  .custom-border {
+    border: 2px solid blue;
+    overflow: hidden;
+     }
+
+     .mainContainer {
+      display: flex;
+      justify-content: center; /* Center the search bar horizontally */
+      padding: 1rem; 
+      width: 100%/* Optional: Adds some space around the form */
+  }
+  
+  .custom-wrapper {
+      width: 100%; /* By default, take full width */
+      max-width: 600px; /* On larger screens, max out at 50% of the viewport width */
+      box-sizing: border-box; /* Ensures padding and border are included in the width */
+  }
+  
+
+  .border-0:focus{
+    background-color: white !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+  }

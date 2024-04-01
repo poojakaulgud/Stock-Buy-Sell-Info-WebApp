@@ -1,0 +1,11 @@
+.active{
+    border-radius: 1em;
+    /* border-color: white !important; */
+    background-color: #0b4aae;
+    border-width: 0.5em !important;
+    border: solid white !important;
+}
+
+.navbar{
+    background-color: #1c269c !important;
+}

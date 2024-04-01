@@ -1,0 +1,59 @@
+<div class="page">
+
+
+<div class="mb-3 justify-content-center p-3">
+    <h1 class="mx-5 px-5">Watchlist</h1>
+    <div class="d-flex justify-content-center align-items-center">      
+      <mat-spinner  *ngIf="showDataSpinner" diameter="70"></mat-spinner>
+      </div>
+    <div *ngIf="isEmpty" class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 ">
+            <div class="alert alert-warning " role="alert">
+              <p class="text-center">Currently you don't have any stock in your watchlist.</p>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div *ngIf="ifRemove" class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 ">
+          <div class="alert alert-danger text-center d-flex justify-content-between align-items-center" role="alert">
+            <span class="flex-grow-1">{{showItem}} removed from watchlist.</span>
+            <button type="button" class="btn-close btn-sm" aria-label="Close" (click)="ifRemove=false"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mb-3 text-center justify-content-center p-3">
+    <div *ngFor="let element of watchlist_data" class="container py-2">
+        <div class="stock-card card" (click)="navigate(element.ticker)">
+          <div class="card-body">
+            <div class="row text-start">                
+                <p><button type="button" class="btn-close btn-sm" aria-label="Close" (click)="$event.stopPropagation(); deleteElement(element)"></button></p>
+            </div>
+            <div>
+            <div class="row">
+                <div class="col text-start ">
+                    <h2 class="card-title mb-2">{{element.ticker}}</h2>
+                    <h4 class="card-subtitle mb-2 text-muted">{{element.description}}</h4>
+                </div>
+                <div class="col text-start " [class.text-danger]="!(element.dp>0)" [class.text-success]="(element.dp>0)">
+                    <h2 class="card-title mb-2">{{element.c}}</h2>
+                    <h4 class="card-text stock-change"><span *ngIf="(element.dp>0)">&#x25B2;</span><span *ngIf="!(element.dp>0)">&#x25BC;</span>{{element.d}} ({{element.dp}}%)</h4>
+                </div>
+            </div>       
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="footer bottom-0 bg-light text-center p-1 w-100">
+  <b><p class="mb-0">Powered by <a class="" target="_blank" href="https://finnhub.io">Finnhub.io</a></p></b>
+</div>
+
+
+</div>

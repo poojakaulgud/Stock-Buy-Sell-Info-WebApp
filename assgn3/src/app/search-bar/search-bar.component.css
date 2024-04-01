@@ -1,0 +1,64 @@
+
+  
+
+  
+  .custom-border {
+    border: 2px solid blue;
+    overflow: hidden;
+     }
+
+     .mainContainer {
+      display: flex;
+      justify-content: center; 
+      padding: 1rem; 
+      width: 100%;
+  }
+  
+  .custom-wrapper {
+      width: 100%;
+      max-width: 600px; 
+      box-sizing: border-box; 
+  }
+
+  .logo {
+    display: block;
+    width: auto;
+    height: 15vh;
+  } 
+
+  .img-fluid{
+    width: 100% !important; /* force image to be width of card */
+    height: 100% !important; /* maintain aspect ratio */
+    object-fit: cover
+  }
+
+  .pointer:hover {
+    cursor: pointer;
+  }
+
+  .border-0:focus{
+    background-color: white !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+  }
+
+  .custom-height{
+    height: 15vh;
+  }
+
+  .custom-width{
+    width: 50vw
+  }
+
+
+  .page{
+    position: relative;
+    min-height: 100vh;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 2.5rem;            /* Footer height */
+  }
+  

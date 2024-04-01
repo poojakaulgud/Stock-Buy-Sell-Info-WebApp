@@ -1,0 +1,304 @@
+<div class="page">
+
+
+
+<div class="mb-3 text-center justify-content-center p-3"> 
+    <h1>Stock Search</h1>
+      <form [formGroup]="myForm" class="mainContainer text-center">
+      <div class="d-inline-flex input-group align-items-center rounded-pill custom-border  custom-wrapper">
+        <input type="text" class="form-control border-0" id="typeahead-basic" [(ngModel)]="sts" 
+              placeholder="Enter Stock Ticker Symbol" ngbSize="sm"
+              matInput  [matAutocomplete]="auto" formControlName="name" [formControl]="myControl">
+        <div class="input-group-append col-auto">
+          <button class="btn btn-outline-secondary border-0" type="submit" (click)="somefunc()">
+            <i class="bi bi-search"></i>
+          </button>
+          <button class="btn btn-outline-secondary border-0" type="button" (click)="clearFunc()">
+            <i class="bi bi-x-circle"></i>
+          </button>
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith" (optionSelected)="onAutoSelect()">
+            <mat-option *ngIf="showSpinner">
+              <mat-spinner diameter="20"></mat-spinner>
+            </mat-option>
+            <mat-option *ngFor="let element of autocomplete_list" [value]="element.displaySymbol">
+              {{element.displaySymbol}} | {{element.description}}
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+      </div>
+    </form>    
+  </div>
+
+  
+  <!-- <div *ngIf="isObjectNotEmpty(desc_data)"> -->
+    <div class="d-flex justify-content-center align-items-center">      
+      <mat-spinner  *ngIf="showDataSpinner" diameter="70"></mat-spinner>
+      </div>
+  <div *ngIf="isClear">
+    
+
+    <div *ngIf="sold" class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10">
+          <div class="alert alert-danger text-center d-flex justify-content-between align-items-center" role="alert">
+            <span class="flex-grow-1">{{ text }} sold successfully.</span>
+            <button type="button" class="btn-close" aria-label="Close" (click)="sold=false"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="bought" class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 ">
+          <div class="alert alert-success text-center d-flex justify-content-between align-items-center" role="alert">
+            <span class="flex-grow-1">{{ text }} bought successfully.</span>
+            <button type="button" class="btn-close" aria-label="Close" (click)="bought=false"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- <app-stock-grid *ngIf="isObjectNotEmpty(desc_data) && isObjectNotEmpty(quote_data) && isObjectNotEmpty(peers_data)" [desc_data]="desc_data" [peers_data]="peers_data" [quote_data]="quote_data" ></app-stock-grid> -->
+    <div class="container" *ngIf="isObjectNotEmpty(desc_data) && isObjectNotEmpty(quote_data) && isObjectNotEmpty(peers_data)">
+      <div *ngIf="ifBlock && justClick" class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 ">
+            <div class="alert alert-success text-center d-flex justify-content-between align-items-center" role="alert">
+              <span class="flex-grow-1">{{desc_data.ticker}} added to watchlist.</span>
+              <button type="button" class="btn-close btn-sm" aria-label="Close" (click)="justClick=false"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!ifBlock && justClick" class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 ">
+            <div class="alert alert-danger text-center d-flex justify-content-between align-items-center" role="alert">
+              <span class="flex-grow-1">{{desc_data.ticker}} removed from watchlist.</span>
+              <button type="button" class="btn-close btn-sm" aria-label="Close" (click)="justClick=false"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4 p-0 text-center">
+          <div class="container">
+              <div class="row justify-content-center">
+                  <span><h2 class="mb-0 d-inline">{{desc_data.ticker}}</h2>&nbsp;<i class="bi d-inline pointer" [class.text-warning]="ifFill" [class.bi-star]="!ifFill" [class.bi-star-fill]="ifFill" (click)="toggleWatchlist(desc_data, quote_data)"></i></span>
+              </div>
+              <div class="row justify-content-center">
+                  <h3 class="mb-0">{{desc_data.name}}</h3>
+              </div>
+              <div class="row justify-content-center">
+                  <h5 class="mb-0">{{desc_data.exchange}}</h5>
+              </div>
+              <div class="row d-inline">
+                  <div class="col-auto p-0">                    
+                  <button type="button" class="btn btn-success btn-sm" (click)="openBuyDialog(desc_data, quote_data ,'Buy')">Buy</button>&nbsp;<button type="button" *ngIf="showSellButton" class="btn btn-danger btn-sm" (click)="openBuyDialog(desc_data, quote_data, 'Sell')">Sell</button>
+                  </div>
+              </div>
+          </div>
+        </div>
+        <div class="col-4 p-0 text-center">
+          <div class="row justify-content-center"><img class="logo"src="{{desc_data.logo}}" alt=""></div>       
+        </div>
+        <div class="col-4 p-0 text-center">
+          <div class="container checkColor" [class.text-danger]="!icon" [class.text-success]="icon">
+              <div class="row justify-content-center">
+                  <h2 class="mb-0 d-inline">{{quote_data.c}}</h2>
+              </div>
+              <div class="row justify-content-center">
+                  <h3 class="mb-0"><span *ngIf="icon">&#x25B2;</span><span *ngIf="!icon">&#x25BC;</span>{{quote_data.d}}({{quote_data.dp}}%)</h3>
+              </div>
+              <div class="text-dark row justify-content-center">
+                  <h5>{{current_time}}</h5>
+              </div>
+              <div class="row justify-content-center">
+                  <div class="col mx-5">                    
+                  <p></p>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+          <p></p>
+      </div>
+      <div class="row text-center checkStatus" [class.text-danger]="!m_status" [class.text-success]="m_status">
+          <p><b>{{add_line}}</b></p>
+      </div>
+      <div class="row justify-content-center">
+          <mat-tab-group>
+              <!-- SUMMARY -->
+              <mat-tab label="Summary"> 
+                  <div class="container">
+                      <div class="row justify-content-center">
+                          <div class="col-md-6">
+                              <div class="row">
+                                  <div class="col-md-6 p-3">
+                                      <div class="row text-center justify-content-center m-0"><p class="mb-0"><b>High Price:</b>  {{quote_data.h}}</p></div>
+                                      <div class="row text-center justify-content-center m-0"><p class="mb-0"><b>Low Price:</b>  {{quote_data.l}}</p>   </div>
+                                      <div class="row text-center justify-content-center m-0"><p class="mb-0"><b>Open Price:</b>  {{quote_data.o}}</p></div>
+                                      <div class="row text-center justify-content-center m-0"><p class="mb-0"><b>Prev. Close:</b>  {{quote_data.pc}}</p></div>
+                                  </div>
+                                  <div class="col-md-6">
+  
+                                  </div>
+                              </div>
+                              <div class="row">
+                                  <div class="col-md-12">
+                                      <div class="row text-center justify-content-center mb-1">
+                                          <p><b><u>About the Company</u></b></p>
+                                      </div>
+                                      <div class="row text-center justify-content-center">
+                                          <p><b>IPO Start Date:</b> {{desc_data.ipo}}</p>
+                                      </div>
+                                      <div class="row text-center justify-content-center">
+                                          <p><b>Industry:</b> {{desc_data.finnhubIndustry}}</p>
+                                      </div>
+                                      <div class="row text-center justify-content-center">
+                                          <p><b>Webpage:</b> <a href="{{desc_data.weburl}}" target="_blank">  {{desc_data.weburl}}</a></p>
+                                      </div>
+                                      <div class="row text-center justify-content-center">
+                                          <p><b>Company Peers:</b></p>
+                                      </div>
+                                      <div class="row text-center justify-content-center">
+                                          <p><a href="#" (click)="changeStockData($event, peer)" *ngFor="let peer of peers_data" ><span>
+                                              {{peer}}, 
+                                          </span></a></p>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-md-6">                              
+                          <!-- <app-stock-price-chart *ngIf="stock_price_data.StockPrice && sts" [sts]="sts" [StockPrice]="stock_price_data.StockPrice" [icon]="icon"></app-stock-price-chart> -->
+                          <div *ngIf="stock_price_data.StockPrice && sts" class="bg-light">
+                            <highcharts-chart
+                               [Highcharts] = "highcharts" 
+                               [options] = "stockChartOptions" 
+                               style = "width: 100%; height: auto; display: block;">
+                            </highcharts-chart>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+              </mat-tab>
+  
+              <!-- TOP NEWS -->
+              <mat-tab label="Top News" > 
+                <div class="container">
+                  <div *ngFor="let row of news_rows; let rowIndex = index" class="row m-3">
+                    <div *ngFor="let article of row; let articleIndex = index" class="col-md-6">
+                      <div class="card h-100 bg-light mb-3 " >
+                        <div class="card-body pointer" (click)="openDialog(rowIndex, articleIndex)">
+                          <div class="row px-3" >
+                            <div class="col-lg-4 custom-height col-sm-12 px-0">                              
+                              <img src="{{article.image}}" class="img-fluid rounded-start rounded-end" alt="Card image cap">
+                            </div>
+                            <div class="col-lg-8 col-sm-12 text-center text-wrap px-0">
+                              <div class="row pt-2"><p class="card-text mt-2">{{article.headline}}</p></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>                      
+                    </div>
+                  </div>
+                  
+                </div>
+
+              </mat-tab>
+  
+              <!-- CHARTS -->
+              <mat-tab label="Charts">
+                <div class="container">
+                  <highcharts-chart
+                  *ngIf="chartKey"
+                           [Highcharts] = "highcharts" 
+                           [options] = "mainChartOptions" 
+                           style = "width: 100%; height: 100vh; display: block;">
+                        </highcharts-chart>
+                </div>
+              </mat-tab>
+  
+              <!-- INSIGHTS -->
+              <mat-tab label="Insights">
+                <!-- inside your component.html file -->
+                <h2 class="text-center">Insider Sentiments</h2>
+                <div class="container mt-2 text-center custom-width justify-content-between ">
+                  <table class="table ">
+                    <thead>
+                      <tr>
+                        <th scope="col">{{desc_data.name}}</th>
+                        <th scope="col">MSPR</th>
+                        <th scope="col">Change</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">Total</th>
+                        <td>{{ total_mspr }}</td>
+                        <td>{{ total_change }}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Positive</th>
+                        <td>{{ positive_mspr }}</td>
+                        <td>{{ positive_change }}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Negative</th>
+                        <td>{{ negative_mspr }}</td>
+                        <td>{{ negative_change }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <!-- <div *ngIf="rec_chart_data.length>0" class="bg-light"> -->
+                        <highcharts-chart
+                           [Highcharts] = "highcharts" 
+                           [options] = "recChartOptions" 
+                           style = "width: 100%; height: auto; display: block;">
+                        </highcharts-chart>
+                        <!-- </div> -->
+                    </div>
+                    <div class="col-md-6">
+                      <highcharts-chart
+                           [Highcharts] = "highcharts" 
+                           [options] = "earningsChartOptions" 
+                           style = "width: 100%; height: auto; display: block;">
+                        </highcharts-chart>
+                    </div>
+                  </div>
+                </div>
+
+              </mat-tab>
+          </mat-tab-group>
+      </div>
+    </div>  
+  </div>
+
+
+  <div *ngIf="isError" class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10 ">
+        <div class="alert alert-danger text-center" role="alert">
+          No data found. Please enter a valid Ticker.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br><br><br>
+
+
+  
+  <div class="footer bottom-0 bg-light text-center p-1 w-100">
+    <b><p class="mb-0">Powered by <a class="" target="_blank" href="https://finnhub.io">Finnhub.io</a></p></b>
+  </div>
+
+</div>
+  
+  
+  

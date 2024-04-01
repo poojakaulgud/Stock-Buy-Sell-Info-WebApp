@@ -1,0 +1,32 @@
+<div class="mb-3 text-center justify-content-center p-3"> 
+    <h1>Stock Search</h1>
+      <form [formGroup]="myForm" class="mainContainer text-center ">
+      <div class="d-inline-flex input-group align-items-center rounded-pill custom-border custom-wrapper">
+        <input type="text" class="form-control border-0 myClass" id="typeahead-basic" [(ngModel)]="sts" 
+              placeholder="Enter Stock Ticker Symbol" ngbSize="sm"
+              matInput  [matAutocomplete]="auto" formControlName="name" [formControl]="myControl">
+        <div class="input-group-append col-auto">
+          <button class="btn btn-outline-secondary border-0" type="submit" (click)="somefunc()">
+            <i class="bi bi-search"></i>
+          </button>
+          <button class="btn btn-outline-secondary border-0" type="button" (click)="clearFunc()">
+            <i class="bi bi-x-circle"></i>
+          </button>
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith" (optionSelected)="onAutoSelect()">
+            <mat-option *ngIf="showSpinner">
+              <mat-spinner diameter="20"></mat-spinner>
+            </mat-option>
+            <mat-option *ngFor="let element of autocomplete_list" [value]="element.displaySymbol">
+              {{element.displaySymbol}} | {{element.description}}
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+      </div>
+    </form>    
+  </div>
+
+
+  
+<div class="position-fixed bottom-0 bg-light text-center p-1 w-100">
+  <b><p class="mb-0">Powered by <a class="" target="_blank" href="https://finnhub.io">Finnhub.io</a></p></b>
+</div>
